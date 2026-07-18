@@ -16,7 +16,7 @@
             bg: '#F8FAFC',
             text: '#0F172A',
           },
-          borderRadius: { 'xl': '20px' },
+          borderRadius: { xl: '20px' },
           fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
         }
       }
@@ -24,102 +24,95 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
   <style>
-    /* ── base & globals ── */
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Inter', system-ui, sans-serif; background:#F8FAFC; color:#0F172A; }
+    body { font-family: 'Inter', system-ui, sans-serif; background:#F8FAFC; color:#0F172A; transition: background 0.3s, color 0.3s; }
     .dark body { background:#0B1120; color:#F1F5F9; }
-    /* glassmorphism */
-    .glass { background: rgba(255,255,255,0.65); backdrop-filter: blur(16px) saturate(180%); border:1px solid rgba(255,255,255,0.3); }
+    .glass { background: rgba(255,255,255,0.65); backdrop-filter: blur(16px); border:1px solid rgba(255,255,255,0.3); }
     .dark .glass { background: rgba(30,41,59,0.7); border-color: rgba(255,255,255,0.06); }
-    .glass-dark { background: rgba(15,23,42,0.7); backdrop-filter: blur(16px); border:1px solid rgba(255,255,255,0.08); }
-    .dark .glass-dark { background: rgba(15,23,42,0.8); }
-    /* gradient button */
-    .btn-gradient { background: linear-gradient(135deg, #0E7C66, #22C55E); color:#fff; box-shadow:0 4px 20px rgba(14,124,102,0.3); transition:all 0.3s ease; }
+    .btn-gradient { background: linear-gradient(135deg, #0E7C66, #22C55E); color:#fff; box-shadow:0 4px 20px rgba(14,124,102,0.3); transition:all 0.3s; }
     .btn-gradient:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(14,124,102,0.4); }
-    .btn-outline { background:transparent; border:2px solid #0E7C66; color:#0E7C66; transition:all 0.3s ease; }
+    .btn-outline { background:transparent; border:2px solid #0E7C66; color:#0E7C66; transition:all 0.3s; }
     .btn-outline:hover { background:#0E7C66; color:#fff; transform:translateY(-2px); }
     .dark .btn-outline { border-color:#18B79C; color:#18B79C; }
     .dark .btn-outline:hover { background:#18B79C; color:#0B1120; }
-    /* reveal animation */
     .reveal { opacity:0; transform:translateY(40px); transition:all 0.8s cubic-bezier(0.22,1,0.36,1); }
     .reveal.visible { opacity:1; transform:translateY(0); }
-    /* scrollbar */
+    .floating-doc { position:absolute; background:rgba(255,255,255,0.8); backdrop-filter:blur(8px); border-radius:12px; padding:10px 16px; box-shadow:0 8px 32px rgba(0,0,0,0.06); border:1px solid rgba(255,255,255,0.3); font-size:0.7rem; font-weight:500; display:flex; align-items:center; gap:8px; animation:float 8s ease-in-out infinite; pointer-events:none; }
+    .dark .floating-doc { background:rgba(30,41,59,0.8); border-color:rgba(255,255,255,0.06); }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-16px); } }
+    @keyframes pulse-glow { 0%,100% { opacity:0.4; transform:scale(1); } 50% { opacity:0.8; transform:scale(1.05); } }
+    .particle { position:absolute; border-radius:50%; pointer-events:none; background:radial-gradient(circle, rgba(14,124,102,0.3), transparent); animation:float-particle 12s linear infinite; }
+    @keyframes float-particle { 0% { transform:translate(0,0) scale(1); opacity:0; } 10% { opacity:0.6; } 90% { opacity:0.6; } 100% { transform:translate(var(--tx), var(--ty)) scale(0); opacity:0; } }
+    .faq-item { border-bottom:1px solid rgba(0,0,0,0.06); padding:20px 0; cursor:pointer; transition:all 0.3s; }
+    .dark .faq-item { border-color:rgba(255,255,255,0.06); }
+    .faq-item .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s; opacity:0; }
+    .faq-item.open .faq-answer { max-height:200px; opacity:1; }
+    .faq-item .faq-icon { transition:transform 0.3s; }
+    .faq-item.open .faq-icon { transform:rotate(180deg); }
     ::-webkit-scrollbar { width:8px; }
     ::-webkit-scrollbar-track { background:#f1f1f1; }
     ::-webkit-scrollbar-thumb { background:#0E7C66; border-radius:10px; }
     .dark ::-webkit-scrollbar-track { background:#1E293B; }
     .dark ::-webkit-scrollbar-thumb { background:#18B79C; }
-    /* floating docs (reuse) */
-    .floating-doc { position:absolute; background:rgba(255,255,255,0.8); backdrop-filter:blur(8px); border-radius:12px; padding:10px 16px; box-shadow:0 8px 32px rgba(0,0,0,0.06); border:1px solid rgba(255,255,255,0.3); font-size:0.7rem; font-weight:500; display:flex; align-items:center; gap:8px; animation:float 8s ease-in-out infinite; pointer-events:none; }
-    .dark .floating-doc { background:rgba(30,41,59,0.8); border-color:rgba(255,255,255,0.06); }
-    @keyframes float { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-16px) rotate(2deg); } }
-    @keyframes pulse-glow { 0%,100% { opacity:0.4; transform:scale(1); } 50% { opacity:0.8; transform:scale(1.05); } }
-    /* particles */
-    .particle { position:absolute; border-radius:50%; pointer-events:none; background:radial-gradient(circle, rgba(14,124,102,0.3), transparent); animation:float-particle 12s linear infinite; }
-    @keyframes float-particle { 0% { transform:translate(0,0) scale(1); opacity:0; } 10% { opacity:0.6; } 90% { opacity:0.6; } 100% { transform:translate(var(--tx), var(--ty)) scale(0); opacity:0; } }
-    /* faq */
-    .faq-item { border-bottom:1px solid rgba(0,0,0,0.06); padding:20px 0; cursor:pointer; transition:all 0.3s ease; }
-    .dark .faq-item { border-color:rgba(255,255,255,0.06); }
-    .faq-item .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease; opacity:0; }
-    .faq-item.open .faq-answer { max-height:200px; opacity:1; }
-    .faq-item .faq-icon { transition:transform 0.3s ease; }
-    .faq-item.open .faq-icon { transform:rotate(180deg); }
+    .sidebar-icon { transition: all 0.2s; }
+    .sidebar-icon:hover { color: #0E7C66; }
+    .dark .sidebar-icon:hover { color: #18B79C; }
   </style>
 </head>
 <body>
   <div id="root"></div>
 
-  <!-- CDN Dependencies -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-router-dom@6/umd/react-router-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script type="text/babel">
-    // ─────────────────────────────────────────────────────────────
-    // 1. ICONS (reusable SVG components)
-    // ─────────────────────────────────────────────────────────────
-    const Icons = {
-      Logo: () => <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="url(#lg)"/><path d="M12 12L20 20L28 12" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/><path d="M12 20L20 28L28 20" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/><path d="M20 8V32" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity="0.5"/><circle cx="20" cy="12" r="2" fill="#fff" opacity="0.3"/><circle cx="20" cy="28" r="2" fill="#fff" opacity="0.3"/><defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stopColor="#0E7C66"/><stop offset="100%" stopColor="#22C55E"/></linearGradient></defs></svg>,
-      Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12H21"/><path d="M3 6H21"/><path d="M3 18H21"/></svg>,
-      X: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18"/><path d="M6 6L18 18"/></svg>,
-      Moon: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
-      Sun: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1V3"/><path d="M12 21V23"/><path d="M4.22 4.22L5.64 5.64"/><path d="M18.36 18.36L19.78 19.78"/><path d="M1 12H3"/><path d="M21 12H23"/><path d="M4.22 19.78L5.64 18.36"/><path d="M18.36 5.64L19.78 4.22"/></svg>,
-      Upload: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15V19c0 .53-.21 1.04-.59 1.41-.36.37-.87.59-1.41.59H5c-.53 0-1.04-.22-1.41-.59C3.21 20.04 3 19.53 3 19v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>,
-      ArrowDown: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>,
-      Check: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>,
-      Star: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>,
-      FileText: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>,
-      Ai: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v5"/><path d="M12 17v5"/><path d="M2 12h5"/><path d="M17 12h5"/><circle cx="12" cy="12" r="3"/></svg>,
-      Data: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
-      Shield: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>,
-      Lock: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>,
-      Cloud: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.5 19H9a7 7 0 110-14h.5A7.5 7.5 0 0117.5 19z"/></svg>,
-      Users: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>,
-      Clock: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>,
-      Home: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>,
-      Doc: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>,
-      Analytics: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12v-2a5 5 0 00-5-5H8a5 5 0 00-5 5v2"/><circle cx="12" cy="16" r="5"/><path d="M12 11v5"/><path d="M9 13l3 3 3-3"/></svg>,
-      Template: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>,
-      Workflow: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="16" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M8 5h8"/><path d="M5 8v8"/><path d="M19 8v8"/><path d="M8 19h8"/></svg>,
-      Export: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>,
-      Api: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M12 4v4"/><path d="M12 16v4"/><path d="M4 12h4"/><path d="M16 12h4"/></svg>,
-      Billing: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>,
-      Settings: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
-      CheckCircle: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>,
-      LinkedIn: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>,
-      Github: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.15 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.62.24 2.85.12 3.15.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>,
-      YouTube: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>,
-      Twitter: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
+    const { useState, useEffect, createContext, useContext } = React;
+
+    // ─── Icons ──────────────────────────────────────────────
+    const Icon = ({ name, className = 'w-5 h-5', ...props }) => {
+      const icons = {
+        logo: <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="url(#lg)"/><path d="M12 12L20 20L28 12" stroke="#fff" strokeWidth="2.5"/><path d="M12 20L20 28L28 20" stroke="#fff" strokeWidth="2.5"/><path d="M20 8V32" stroke="#fff" strokeWidth="2.5" opacity="0.5"/><circle cx="20" cy="12" r="2" fill="#fff" opacity="0.3"/><circle cx="20" cy="28" r="2" fill="#fff" opacity="0.3"/><defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stopColor="#0E7C66"/><stop offset="100%" stopColor="#22C55E"/></linearGradient></defs></svg>,
+        menu: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12H21"/><path d="M3 6H21"/><path d="M3 18H21"/></svg>,
+        moon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+        sun: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1V3"/><path d="M12 21V23"/><path d="M4.22 4.22L5.64 5.64"/><path d="M18.36 18.36L19.78 19.78"/><path d="M1 12H3"/><path d="M21 12H23"/><path d="M4.22 19.78L5.64 18.36"/><path d="M18.36 5.64L19.78 4.22"/></svg>,
+        upload: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15V19c0 .53-.21 1.04-.59 1.41-.36.37-.87.59-1.41.59H5c-.53 0-1.04-.22-1.41-.59C3.21 20.04 3 19.53 3 19v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>,
+        arrowDown: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>,
+        check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>,
+        star: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>,
+        file: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>,
+        ai: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v5"/><path d="M12 17v5"/><path d="M2 12h5"/><path d="M17 12h5"/><circle cx="12" cy="12" r="3"/></svg>,
+        data: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
+        shield: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>,
+        lock: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>,
+        cloud: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.5 19H9a7 7 0 110-14h.5A7.5 7.5 0 0117.5 19z"/></svg>,
+        users: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>,
+        clock: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>,
+        home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>,
+        doc: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>,
+        analytics: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12v-2a5 5 0 00-5-5H8a5 5 0 00-5 5v2"/><circle cx="12" cy="16" r="5"/><path d="M12 11v5"/><path d="M9 13l3 3 3-3"/></svg>,
+        template: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>,
+        workflow: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="16" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M8 5h8"/><path d="M5 8v8"/><path d="M19 8v8"/><path d="M8 19h8"/></svg>,
+        export: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>,
+        api: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M12 4v4"/><path d="M12 16v4"/><path d="M4 12h4"/><path d="M16 12h4"/></svg>,
+        billing: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>,
+        settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
+        linkedin: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>,
+        github: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.15 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.62.24 2.85.12 3.15.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>,
+        youtube: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>,
+        twitter: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
+        checkCircle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>,
+        layers: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>,
+        zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
+      };
+      const icon = icons[name] || null;
+      return icon ? <span className={className} dangerouslySetInnerHTML={{ __html: icon.props.children ? icon.props.children : icon }} /> : null;
     };
 
-    // ─────────────────────────────────────────────────────────────
-    // 2. CONTEXT: Theme (dark mode)
-    // ─────────────────────────────────────────────────────────────
-    const ThemeContext = React.createContext();
-
+    // ─── Theme Context ──────────────────────────────────────
+    const ThemeContext = createContext();
     const ThemeProvider = ({ children }) => {
-      const [dark, setDark] = React.useState(() => {
+      const [dark, setDark] = useState(() => {
         if (typeof window !== 'undefined') {
           const stored = localStorage.getItem('extraxy-theme');
           if (stored) return stored === 'dark';
@@ -127,34 +120,19 @@
         }
         return false;
       });
-
-      React.useEffect(() => {
-        if (dark) {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('extraxy-theme', 'dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('extraxy-theme', 'light');
-        }
+      useEffect(() => {
+        if (dark) { document.documentElement.classList.add('dark'); localStorage.setItem('extraxy-theme', 'dark'); }
+        else { document.documentElement.classList.remove('dark'); localStorage.setItem('extraxy-theme', 'light'); }
       }, [dark]);
-
       const toggle = () => setDark(prev => !prev);
-
       return <ThemeContext.Provider value={{ dark, toggle }}>{children}</ThemeContext.Provider>;
     };
+    const useTheme = () => useContext(ThemeContext);
 
-    const useTheme = () => React.useContext(ThemeContext);
-
-    // ─────────────────────────────────────────────────────────────
-    // 3. REUSABLE COMPONENTS
-    // ─────────────────────────────────────────────────────────────
+    // ─── Components ──────────────────────────────────────────
     const Button = ({ children, variant = 'primary', className = '', ...props }) => {
       const base = 'px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2';
-      const variants = {
-        primary: 'btn-gradient',
-        outline: 'btn-outline',
-        ghost: 'hover:bg-primary/5 dark:hover:bg-white/5 text-text/70 dark:text-gray-300',
-      };
+      const variants = { primary: 'btn-gradient', outline: 'btn-outline', ghost: 'hover:bg-primary/5 dark:hover:bg-white/5 text-text/70 dark:text-gray-300' };
       return <button className={`${base} ${variants[variant]} ${className}`} {...props}>{children}</button>;
     };
 
@@ -164,37 +142,11 @@
       </div>
     );
 
-    const NavLink = ({ to, children, ...props }) => {
-      const { Link } = ReactRouterDOM;
-      return <Link to={to} className="px-3.5 py-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors text-sm font-medium text-text/70 dark:text-gray-300" {...props}>{children}</Link>;
-    };
+    // ─── Pages ──────────────────────────────────────────────
 
-    // ─────────────────────────────────────────────────────────────
-    // 4. SUPABASE STUB (lib/supabase.js)
-    // ─────────────────────────────────────────────────────────────
-    // In a real project: import { createClient } from '@supabase/supabase-js'
-    const supabase = {
-      // Placeholder: replace with actual client
-      auth: {
-        signIn: async ({ email, password }) => { console.log('Sign in', email, password); return { data: { user: { email } }, error: null }; },
-        signUp: async ({ email, password }) => { console.log('Sign up', email, password); return { data: { user: { email } }, error: null }; },
-        signOut: async () => { console.log('Sign out'); return { error: null }; },
-        getSession: async () => ({ data: { session: null }, error: null }),
-      },
-      storage: {
-        from: (bucket) => ({
-          upload: async (path, file) => { console.log('Upload to', bucket, path, file); return { data: { path }, error: null }; },
-        }),
-      },
-    };
-
-    // ─────────────────────────────────────────────────────────────
-    // 5. PAGES
-    // ─────────────────────────────────────────────────────────────
-
-    // ----- Home (all sections) -----
+    // Home Page (All Sections)
     const Home = () => {
-      React.useEffect(() => {
+      useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.08 });
@@ -203,42 +155,54 @@
       }, []);
 
       const features = [
-        { icon: Icons.Ai, label: 'AI OCR' },
-        { icon: Icons.FileText, label: 'Smart Document Parser' },
-        { icon: Icons.FileText, label: 'Invoice Extraction' },
-        { icon: Icons.FileText, label: 'Receipt Extraction' },
-        { icon: Icons.FileText, label: 'Bank Statement Extraction' },
-        { icon: Icons.Users, label: 'Resume Parsing' },
-        { icon: Icons.FileText, label: 'Contract Parsing' },
-        { icon: Icons.FileText, label: 'Email Parsing' },
-        { icon: Icons.Layers, label: 'Batch Processing' },
-        { icon: Icons.Shield, label: 'AI Validation' },
-        { icon: Icons.FileText, label: 'Duplicate Detection' },
-        { icon: Icons.FileText, label: 'Barcode Recognition' },
-        { icon: Icons.FileText, label: 'QR Code Detection' },
-        { icon: Icons.Clock, label: 'Real-Time Processing' },
-        { icon: Icons.Api, label: 'REST API' },
-        { icon: Icons.Zap, label: 'Webhooks' },
-        { icon: Icons.FileText, label: 'CSV Export' },
-        { icon: Icons.FileText, label: 'Excel Export' },
-        { icon: Icons.FileText, label: 'JSON Export' },
-        { icon: Icons.FileText, label: 'XML Export' },
-        { icon: Icons.FileText, label: 'Google Sheets Export' },
+        { icon: 'ai', label: 'AI OCR' },
+        { icon: 'file', label: 'Smart Document Parser' },
+        { icon: 'file', label: 'Invoice Extraction' },
+        { icon: 'file', label: 'Receipt Extraction' },
+        { icon: 'file', label: 'Bank Statement Extraction' },
+        { icon: 'users', label: 'Resume Parsing' },
+        { icon: 'file', label: 'Contract Parsing' },
+        { icon: 'file', label: 'Email Parsing' },
+        { icon: 'layers', label: 'Batch Processing' },
+        { icon: 'shield', label: 'AI Validation' },
+        { icon: 'file', label: 'Duplicate Detection' },
+        { icon: 'file', label: 'Barcode Recognition' },
+        { icon: 'file', label: 'QR Code Detection' },
+        { icon: 'clock', label: 'Real-Time Processing' },
+        { icon: 'api', label: 'REST API' },
+        { icon: 'zap', label: 'Webhooks' },
+        { icon: 'file', label: 'CSV Export' },
+        { icon: 'file', label: 'Excel Export' },
+        { icon: 'file', label: 'JSON Export' },
+        { icon: 'file', label: 'XML Export' },
+        { icon: 'file', label: 'Google Sheets Export' },
       ];
 
       const industries = ['Finance','Accounting','Healthcare','Insurance','Legal','Human Resources','Logistics','Supply Chain','Manufacturing','Retail','Education','Real Estate','Government','E-Commerce'];
       const integrations = ['Google Sheets','Excel','Slack','Notion','Zapier','Make','Power Automate','Dropbox','Google Drive','OneDrive','Salesforce','HubSpot','Webhook','REST API'];
       const securityItems = [
-        { icon: Icons.Shield, label: 'AES-256 Encryption' },
-        { icon: Icons.Shield, label: 'GDPR Compliance' },
-        { icon: Icons.Shield, label: 'SOC 2 Ready' },
-        { icon: Icons.Shield, label: 'HIPAA Ready' },
-        { icon: Icons.Cloud, label: 'Cloud Security' },
-        { icon: Icons.Lock, label: 'API Security' },
-        { icon: Icons.Users, label: 'Role-Based Access' },
-        { icon: Icons.Cloud, label: 'Automatic Backups' },
-        { icon: Icons.Lock, label: 'Secure Storage' },
-        { icon: Icons.FileText, label: 'Audit Logs' },
+        { icon: 'shield', label: 'AES-256 Encryption' },
+        { icon: 'shield', label: 'GDPR Compliance' },
+        { icon: 'shield', label: 'SOC 2 Ready' },
+        { icon: 'shield', label: 'HIPAA Ready' },
+        { icon: 'cloud', label: 'Cloud Security' },
+        { icon: 'lock', label: 'API Security' },
+        { icon: 'users', label: 'Role-Based Access' },
+        { icon: 'cloud', label: 'Automatic Backups' },
+        { icon: 'lock', label: 'Secure Storage' },
+        { icon: 'file', label: 'Audit Logs' },
+      ];
+
+      const [faqOpen, setFaqOpen] = useState(null);
+      const faqs = [
+        { q:'How accurate is AI extraction?', a:'Extraxy achieves 99.7% accuracy on structured documents like invoices and receipts. For handwritten or low-quality scans, accuracy may vary, but our AI is continuously improving.' },
+        { q:'Can I upload scanned PDFs?', a:'Yes! Extraxy supports scanned PDFs, images, and even photos taken with your phone. Our OCR engine handles all formats.' },
+        { q:'Does it support handwritten documents?', a:'Yes, our AI can recognize handwritten text with high accuracy, though results may vary depending on legibility.' },
+        { q:'Can I export to Excel?', a:'Absolutely. Extraxy supports Excel, CSV, JSON, XML, and Google Sheets exports with one click.' },
+        { q:'Can I integrate using API?', a:'Yes, we provide a full REST API with webhooks support. You can integrate Extraxy into any application.' },
+        { q:'How secure is my data?', a:'Your data is encrypted with AES-256, and we are GDPR compliant, SOC 2 ready, and HIPAA ready.' },
+        { q:'Can I process thousands of files?', a:'Yes, our batch processing feature supports thousands of files in a single run. Enterprise plans offer unlimited processing.' },
+        { q:'Can I cancel anytime?', a:'Yes, you can cancel your subscription at any time with no hidden fees or penalties.' },
       ];
 
       return (
@@ -255,14 +219,14 @@
             </div>
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="hidden lg:block absolute top-10 right-10 pointer-events-none">
-                <div className="floating-doc" style={{top:'5%',right:'2%'}}><Icons.FileText size={16}/> Invoice #INV-2024</div>
-                <div className="floating-doc" style={{top:'25%',right:'-4%'}}><Icons.FileText size={16}/> Receipt.pdf</div>
-                <div className="floating-doc" style={{top:'45%',right:'0%'}}><Icons.FileText size={16}/> Contract_v2</div>
-                <div className="floating-doc" style={{top:'65%',right:'-6%'}}><Icons.FileText size={16}/> Bank_Statement</div>
-                <div className="floating-doc" style={{top:'82%',right:'4%'}}><Icons.FileText size={16}/> Resume_John</div>
+                <div className="floating-doc" style={{top:'5%',right:'2%'}}><Icon name="file" className="w-4 h-4"/> Invoice #INV-2024</div>
+                <div className="floating-doc" style={{top:'25%',right:'-4%'}}><Icon name="file" className="w-4 h-4"/> Receipt.pdf</div>
+                <div className="floating-doc" style={{top:'45%',right:'0%'}}><Icon name="file" className="w-4 h-4"/> Contract_v2</div>
+                <div className="floating-doc" style={{top:'65%',right:'-6%'}}><Icon name="file" className="w-4 h-4"/> Bank_Statement</div>
+                <div className="floating-doc" style={{top:'82%',right:'4%'}}><Icon name="file" className="w-4 h-4"/> Resume_John</div>
               </div>
               <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <div className="space-y-8 animate-slide-up">
+                <div className="space-y-8">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-primary dark:text-secondary border border-primary/10 dark:border-secondary/20">
                     <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span>
                     <span>AI-Powered Extraction</span>
@@ -274,15 +238,15 @@
                     Upload invoices, receipts, PDFs, bank statements, emails, contracts, resumes, forms, or scanned documents. Extraxy instantly extracts important information and converts it into structured data powered by AI.
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    <Button variant="primary" className="px-8 py-3.5">Start Free <Icons.ArrowDown className="w-4 h-4"/></Button>
+                    <Button variant="primary" className="px-8 py-3.5" onClick={() => window.location.href='/signup'}>Start Free <Icon name="arrowDown" className="w-4 h-4"/></Button>
                     <Button variant="outline" className="px-8 py-3.5">Book Demo</Button>
                   </div>
                   <div className="flex items-center gap-6 text-sm text-text/50 dark:text-gray-400">
-                    <span className="flex items-center gap-1.5"><Icons.Check className="w-4 h-4 text-primary"/> No credit card required</span>
-                    <span className="flex items-center gap-1.5"><Icons.Check className="w-4 h-4 text-primary"/> Free 14-day trial</span>
+                    <span className="flex items-center gap-1.5"><Icon name="check" className="w-4 h-4 text-primary"/> No credit card required</span>
+                    <span className="flex items-center gap-1.5"><Icon name="check" className="w-4 h-4 text-primary"/> Free 14-day trial</span>
                   </div>
                 </div>
-                <div className="relative flex flex-col items-center justify-center animate-fade-in">
+                <div className="relative flex flex-col items-center justify-center">
                   <div className="absolute w-72 h-72 rounded-full bg-primary/10 dark:bg-primary/20 blur-3xl animate-pulse-glow"></div>
                   <div className="relative glass rounded-3xl p-8 md:p-10 w-full max-w-sm border border-white/30 dark:border-white/5 shadow-2xl">
                     <div className="space-y-5">
@@ -290,7 +254,7 @@
                         <div key={idx} className="flex items-center gap-4">
                           <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary font-bold text-sm">{idx+1}</div>
                           <div className="flex-1 text-sm font-semibold text-text dark:text-white">{step}</div>
-                          <div className="w-6 h-6 rounded-full bg-primary/5 dark:bg-white/5 flex items-center justify-center text-primary dark:text-secondary">{idx<2?<Icons.ArrowDown className="w-4 h-4"/>:null}</div>
+                          <div className="w-6 h-6 rounded-full bg-primary/5 dark:bg-white/5 flex items-center justify-center text-primary dark:text-secondary">{idx<2?<Icon name="arrowDown" className="w-4 h-4"/>:null}</div>
                         </div>
                       ))}
                     </div>
@@ -302,10 +266,10 @@
                       <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-secondary"></span></span> Live AI
                     </div>
                   </div>
-                  <div className="absolute -bottom-4 -left-4 glass px-4 py-2.5 rounded-2xl text-sm font-semibold text-text dark:text-white border border-white/30 dark:border-white/5 shadow-lg animate-float-slow">
+                  <div className="absolute -bottom-4 -left-4 glass px-4 py-2.5 rounded-2xl text-sm font-semibold text-text dark:text-white border border-white/30 dark:border-white/5 shadow-lg" style={{animation:'float 8s ease-in-out infinite'}}>
                     <span className="text-primary dark:text-secondary">99.7%</span> <span className="text-text/50 dark:text-gray-400 font-medium ml-1">Accuracy</span>
                   </div>
-                  <div className="absolute -top-4 -left-8 glass px-4 py-2.5 rounded-2xl text-sm font-semibold text-text dark:text-white border border-white/30 dark:border-white/5 shadow-lg animate-float-slow" style={{animationDelay:'-2s'}}>
+                  <div className="absolute -top-4 -left-8 glass px-4 py-2.5 rounded-2xl text-sm font-semibold text-text dark:text-white border border-white/30 dark:border-white/5 shadow-lg" style={{animation:'float 8s ease-in-out infinite', animationDelay:'-2s'}}>
                     <span className="text-secondary">2.4s</span> <span className="text-text/50 dark:text-gray-400 font-medium ml-1">Avg. Speed</span>
                   </div>
                 </div>
@@ -324,7 +288,7 @@
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                 {features.map((f,i) => (
                   <div key={i} className="group glass p-4 md:p-5 rounded-2xl text-center border border-white/30 dark:border-white/5 hover:border-primary/20 dark:hover:border-secondary/20 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-default reveal" style={{transitionDelay:(i*20)+'ms'}}>
-                    <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary mb-2.5 group-hover:scale-110 transition-transform"><f.icon size={20}/></div>
+                    <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary mb-2.5 group-hover:scale-110 transition-transform"><Icon name={f.icon} className="w-5 h-5"/></div>
                     <span className="text-xs font-medium text-text dark:text-gray-300">{f.label}</span>
                   </div>
                 ))}
@@ -342,15 +306,15 @@
               <div className="grid md:grid-cols-3 gap-6 md:gap-8 relative">
                 <div className="hidden md:block absolute top-1/2 left-[16.6%] right-[16.6%] h-0.5 bg-gradient-to-r from-primary via-secondary to-accent opacity-20 -translate-y-1/2"></div>
                 {[
-                  { title:'Upload Files', desc:'Drag & Drop · Email · API · Mobile Upload · Cloud Storage', icon:Icons.Upload },
-                  { title:'AI Reads Every Document', desc:'Invoice Number · Vendor · Customer · Date · Address · Items · Quantity · Tax · Subtotal · Grand Total', icon:Icons.Ai },
-                  { title:'Export Anywhere', desc:'Excel · CSV · JSON · XML · Google Sheets · REST API · Webhook · CRM · ERP', icon:Icons.Data }
+                  { title:'Upload Files', desc:'Drag & Drop · Email · API · Mobile Upload · Cloud Storage', icon:'upload' },
+                  { title:'AI Reads Every Document', desc:'Invoice Number · Vendor · Customer · Date · Address · Items · Quantity · Tax · Subtotal · Grand Total', icon:'ai' },
+                  { title:'Export Anywhere', desc:'Excel · CSV · JSON · XML · Google Sheets · REST API · Webhook · CRM · ERP', icon:'data' }
                 ].map((step, idx) => (
                   <div key={idx} className="glass rounded-3xl p-8 md:p-10 text-center border border-white/30 dark:border-white/5 relative z-10 reveal hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" style={{transitionDelay:(idx*100)+'ms'}}>
-                    <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary mb-5"><step.icon size={28}/></div>
+                    <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary mb-5"><Icon name={step.icon} className="w-7 h-7"/></div>
                     <h3 className="text-xl font-bold text-text dark:text-white mb-2">{step.title}</h3>
                     <p className="text-sm text-text/60 dark:text-gray-400 leading-relaxed">{step.desc}</p>
-                    <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-primary dark:text-secondary"><span>Step {idx+1}</span><Icons.ArrowDown className="w-3 h-3"/></div>
+                    <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-primary dark:text-secondary"><span>Step {idx+1}</span><Icon name="arrowDown" className="w-3 h-3"/></div>
                   </div>
                 ))}
               </div>
@@ -400,7 +364,7 @@
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {securityItems.map((item,i) => (
                   <div key={i} className="glass p-5 rounded-2xl text-center border border-white/30 dark:border-white/5 hover:border-primary/20 dark:hover:border-secondary/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-default reveal" style={{transitionDelay:(i*20)+'ms'}}>
-                    <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary mb-2.5"><item.icon size={20}/></div>
+                    <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center text-primary dark:text-secondary mb-2.5"><Icon name={item.icon} className="w-5 h-5"/></div>
                     <span className="text-xs font-medium text-text dark:text-gray-300">{item.label}</span>
                   </div>
                 ))}
@@ -421,12 +385,12 @@
                   { name:'Michael Torres', role:'HR Director, Global Corp', avatar:'MT', text:'Processing thousands of resumes used to be a nightmare. Now Extraxy parses them instantly with perfect structure. Game changer for our recruiting team.', company:'Global Corp' },
                   { name:'Dr. Emily Park', role:'Operations Lead, HealthCare Plus', avatar:'EP', text:'HIPAA compliance was critical for us. Extraxy delivered enterprise-grade security while making document processing 10x faster. Highly recommended.', company:'HealthCare Plus' }
                 ].map((t,i) => (
-                  <div key={i} className="testimonial-card glass rounded-3xl p-6 md:p-8 border border-white/30 dark:border-white/5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 reveal" style={{transitionDelay:(i*80)+'ms'}}>
+                  <div key={i} className="glass rounded-3xl p-6 md:p-8 border border-white/30 dark:border-white/5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 reveal" style={{transitionDelay:(i*80)+'ms'}}>
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 dark:from-primary/30 dark:to-secondary/30 flex items-center justify-center font-bold text-primary dark:text-secondary text-lg">{t.avatar}</div>
                       <div><div className="font-semibold text-text dark:text-white">{t.name}</div><div className="text-xs text-text/40 dark:text-gray-400">{t.role}</div></div>
                     </div>
-                    <div className="flex gap-0.5 mb-3 text-yellow-400">{[...Array(5)].map((_,ri) => <Icons.Star key={ri}/>)}</div>
+                    <div className="flex gap-0.5 mb-3 text-yellow-400">{[...Array(5)].map((_,ri) => <Icon key={ri} name="star" className="w-4 h-4"/>)}</div>
                     <p className="text-sm text-text/70 dark:text-gray-300 leading-relaxed">"{t.text}"</p>
                     <div className="mt-4 text-xs font-medium text-text/30 dark:text-gray-500">{t.company}</div>
                   </div>
@@ -442,27 +406,15 @@
                 <span className="inline-block text-sm font-semibold text-primary dark:text-secondary tracking-wider uppercase mb-3">FAQ</span>
                 <h2 className="text-3xl md:text-4xl font-extrabold text-text dark:text-white">Frequently asked <br /><span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">questions</span></h2>
               </div>
-              {[
-                { q:'How accurate is AI extraction?', a:'Extraxy achieves 99.7% accuracy on structured documents like invoices and receipts. For handwritten or low-quality scans, accuracy may vary, but our AI is continuously improving.' },
-                { q:'Can I upload scanned PDFs?', a:'Yes! Extraxy supports scanned PDFs, images, and even photos taken with your phone. Our OCR engine handles all formats.' },
-                { q:'Does it support handwritten documents?', a:'Yes, our AI can recognize handwritten text with high accuracy, though results may vary depending on legibility.' },
-                { q:'Can I export to Excel?', a:'Absolutely. Extraxy supports Excel, CSV, JSON, XML, and Google Sheets exports with one click.' },
-                { q:'Can I integrate using API?', a:'Yes, we provide a full REST API with webhooks support. You can integrate Extraxy into any application.' },
-                { q:'How secure is my data?', a:'Your data is encrypted with AES-256, and we are GDPR compliant, SOC 2 ready, and HIPAA ready.' },
-                { q:'Can I process thousands of files?', a:'Yes, our batch processing feature supports thousands of files in a single run. Enterprise plans offer unlimited processing.' },
-                { q:'Can I cancel anytime?', a:'Yes, you can cancel your subscription at any time with no hidden fees or penalties.' }
-              ].map((item,i) => {
-                const [open, setOpen] = React.useState(false);
-                return (
-                  <div key={i} className={`faq-item ${open?'open':''}`} onClick={() => setOpen(!open)}>
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="font-semibold text-text dark:text-white">{item.q}</span>
-                      <span className="faq-icon text-primary dark:text-secondary text-xl font-light">⌄</span>
-                    </div>
-                    <div className="faq-answer pt-2 text-text/60 dark:text-gray-400 leading-relaxed">{item.a}</div>
+              {faqs.map((item,i) => (
+                <div key={i} className={`faq-item ${faqOpen===i?'open':''}`} onClick={() => setFaqOpen(faqOpen===i?null:i)}>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="font-semibold text-text dark:text-white">{item.q}</span>
+                    <span className="faq-icon text-primary dark:text-secondary text-xl font-light">⌄</span>
                   </div>
-                );
-              })}
+                  <div className="faq-answer pt-2 text-text/60 dark:text-gray-400 leading-relaxed">{item.a}</div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -474,7 +426,7 @@
                 <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">Ready to Automate Your <br />Document Workflow?</h2>
                 <p className="mt-4 text-white/80 text-lg max-w-2xl mx-auto">Join thousands of businesses that trust Extraxy for AI-powered document extraction.</p>
                 <div className="mt-8 flex flex-wrap justify-center gap-4">
-                  <Button variant="primary" className="px-8 py-3.5 bg-white text-primary hover:bg-white/90 shadow-xl">Start Free</Button>
+                  <Button variant="primary" className="px-8 py-3.5 bg-white text-primary hover:bg-white/90 shadow-xl" onClick={() => window.location.href='/signup'}>Start Free</Button>
                   <Button variant="outline" className="px-8 py-3.5 border-2 border-white/50 text-white hover:bg-white/10">Contact Sales</Button>
                 </div>
               </div>
@@ -484,18 +436,18 @@
       );
     };
 
-    // ----- Dashboard -----
+    // Dashboard
     const Dashboard = () => {
       const sidebarItems = [
-        { icon: Icons.Home, label: 'Dashboard' },
-        { icon: Icons.Doc, label: 'Documents' },
-        { icon: Icons.Template, label: 'Templates' },
-        { icon: Icons.Analytics, label: 'Analytics' },
-        { icon: Icons.Workflow, label: 'Workflows' },
-        { icon: Icons.Export, label: 'Exports' },
-        { icon: Icons.Api, label: 'API' },
-        { icon: Icons.Billing, label: 'Billing' },
-        { icon: Icons.Settings, label: 'Settings' },
+        { icon: 'home', label: 'Dashboard' },
+        { icon: 'doc', label: 'Documents' },
+        { icon: 'template', label: 'Templates' },
+        { icon: 'analytics', label: 'Analytics' },
+        { icon: 'workflow', label: 'Workflows' },
+        { icon: 'export', label: 'Exports' },
+        { icon: 'api', label: 'API' },
+        { icon: 'billing', label: 'Billing' },
+        { icon: 'settings', label: 'Settings' },
       ];
       const stats = [
         { label: 'Documents', value: '2,847', change: '+12%' },
@@ -510,14 +462,14 @@
         { name: 'Receipt_Expense_0824.jpg', date: '3 hours ago', status: 'Completed' },
       ];
       return (
-        <section className="pt-28 pb-20 md:pt-32 md:pb-28 bg-bg dark:bg-bg">
+        <section className="pt-28 pb-20 md:pt-32 md:pb-28 bg-bg dark:bg-bg min-h-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="glass rounded-3xl border border-white/30 dark:border-white/5 overflow-hidden shadow-2xl">
-              <div className="dashboard-grid grid grid-cols-[64px_1fr] md:grid-cols-[64px_1fr] gap-0 bg-black/5 dark:bg-white/5 rounded-3xl overflow-hidden">
+              <div className="grid grid-cols-[64px_1fr] gap-0">
                 <div className="bg-white dark:bg-[#1E293B] p-4 flex flex-col items-center gap-2">
                   {sidebarItems.map((item,i) => (
                     <div key={i} className="flex flex-col items-center gap-0.5 p-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors cursor-pointer group w-full">
-                      <div className="text-text/40 dark:text-gray-500 group-hover:text-primary dark:group-hover:text-secondary"><item.icon size={18}/></div>
+                      <div className="text-text/40 dark:text-gray-500 group-hover:text-primary dark:group-hover:text-secondary sidebar-icon"><Icon name={item.icon} className="w-[18px] h-[18px]"/></div>
                       <span className="text-[9px] font-medium text-text/30 dark:text-gray-600 group-hover:text-text/60 dark:group-hover:text-gray-300">{item.label}</span>
                     </div>
                   ))}
@@ -541,7 +493,7 @@
                       {recentDocs.map((doc,i) => (
                         <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-bg dark:bg-[#0B1120] hover:bg-primary/5 dark:hover:bg-white/5 transition-colors">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-secondary"><Icons.FileText size={14}/></div>
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-secondary"><Icon name="file" className="w-[14px] h-[14px]"/></div>
                             <div><div className="text-sm font-medium text-text dark:text-white">{doc.name}</div><div className="text-xs text-text/40 dark:text-gray-400">{doc.date}</div></div>
                           </div>
                           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${doc.status==='Completed'?'bg-accent/10 text-accent':'bg-yellow-500/10 text-yellow-500'}`}>{doc.status}</span>
@@ -551,7 +503,7 @@
                   </div>
                   <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5">
                     <div className="flex items-center gap-2 text-xs text-text/40 dark:text-gray-400">
-                      <Icons.Clock size={14}/> <span>Last activity: 2 minutes ago</span>
+                      <Icon name="clock" className="w-[14px] h-[14px]"/> <span>Last activity: 2 minutes ago</span>
                       <span className="w-1 h-1 rounded-full bg-text/20 dark:bg-white/20"></span>
                       <span>1,284 documents processed today</span>
                     </div>
@@ -564,13 +516,14 @@
       );
     };
 
-    // ----- Login -----
+    // Login
     const Login = () => {
-      const [email, setEmail] = React.useState('');
-      const [password, setPassword] = React.useState('');
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
       const handleSubmit = (e) => {
         e.preventDefault();
-        supabase.auth.signIn({ email, password });
+        alert('Login demo: ' + email);
+        window.location.href = '/dashboard';
       };
       return (
         <section className="pt-28 pb-20 md:pt-32 md:pb-28 flex items-center justify-center min-h-screen bg-bg dark:bg-bg">
@@ -596,13 +549,14 @@
       );
     };
 
-    // ----- Signup -----
+    // Signup
     const Signup = () => {
-      const [email, setEmail] = React.useState('');
-      const [password, setPassword] = React.useState('');
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
       const handleSubmit = (e) => {
         e.preventDefault();
-        supabase.auth.signUp({ email, password });
+        alert('Signup demo: ' + email);
+        window.location.href = '/dashboard';
       };
       return (
         <section className="pt-28 pb-20 md:pt-32 md:pb-28 flex items-center justify-center min-h-screen bg-bg dark:bg-bg">
@@ -628,22 +582,19 @@
       );
     };
 
-    // ----- Upload -----
+    // Upload
     const Upload = () => {
-      const [files, setFiles] = React.useState([]);
+      const [files, setFiles] = useState([]);
       const handleDrop = (e) => {
         e.preventDefault();
         const dropped = Array.from(e.dataTransfer.files);
         setFiles(prev => [...prev, ...dropped]);
       };
-      const handleUpload = async () => {
-        for (const file of files) {
-          await supabase.storage.from('documents').upload(`public/${file.name}`, file);
-        }
-        alert('Upload simulated. Check console.');
+      const handleUpload = () => {
+        alert('Upload demo: ' + files.length + ' file(s) selected');
       };
       return (
-        <section className="pt-28 pb-20 md:pt-32 md:pb-28 bg-bg dark:bg-bg">
+        <section className="pt-28 pb-20 md:pt-32 md:pb-28 bg-bg dark:bg-bg min-h-screen">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 reveal">
               <h1 className="text-3xl font-extrabold text-text dark:text-white">Upload Documents</h1>
@@ -651,7 +602,7 @@
             </div>
             <Card className="p-8 md:p-12 text-center">
               <div className="border-2 border-dashed border-primary/30 dark:border-secondary/30 rounded-3xl p-12 transition-colors hover:border-primary dark:hover:border-secondary" onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
-                <Icons.Upload className="w-16 h-16 mx-auto text-primary dark:text-secondary opacity-60" />
+                <Icon name="upload" className="w-16 h-16 mx-auto text-primary dark:text-secondary opacity-60"/>
                 <p className="mt-4 text-text/60 dark:text-gray-400">Drop files here or <label className="text-primary dark:text-secondary cursor-pointer hover:underline">browse</label></p>
                 <input type="file" multiple className="hidden" onChange={(e) => setFiles(prev => [...prev, ...Array.from(e.target.files)])} />
                 {files.length > 0 && (
@@ -672,46 +623,50 @@
       );
     };
 
-    // ─────────────────────────────────────────────────────────────
-    // 6. LAYOUT: Navbar & Footer (shared)
-    // ─────────────────────────────────────────────────────────────
+    // ─── Navbar ──────────────────────────────────────────────
     const Navbar = () => {
       const { dark, toggle } = useTheme();
-      const [mobileOpen, setMobileOpen] = React.useState(false);
-      const { Link } = ReactRouterDOM;
+      const [mobileOpen, setMobileOpen] = useState(false);
       const navLinks = ['Home', 'Features', 'Solutions', 'Pricing', 'API', 'Integrations', 'Resources', 'FAQ', 'Contact'];
+      const scrollToSection = (e, link) => {
+        e.preventDefault();
+        const id = link.toLowerCase();
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else window.location.href = '/#' + id;
+      };
       return (
         <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass dark:glass-dark">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16 md:h-20">
-              <Link to="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-text dark:text-white flex-shrink-0">
-                <Icons.Logo /> <span>Extraxy</span>
-              </Link>
+              <a href="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-text dark:text-white flex-shrink-0">
+                <Icon name="logo" className="w-10 h-10"/> <span>Extraxy</span>
+              </a>
               <nav className="hidden lg:flex items-center gap-1 text-sm font-medium text-text/70 dark:text-gray-300">
-                {navLinks.map(link => <Link key={link} to={`/#${link.toLowerCase()}`} className="px-3.5 py-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors">{link}</Link>)}
+                {navLinks.map(link => <a key={link} href={`#${link.toLowerCase()}`} onClick={(e) => scrollToSection(e, link)} className="px-3.5 py-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors">{link}</a>)}
               </nav>
               <div className="hidden lg:flex items-center gap-3">
                 <button onClick={toggle} className="p-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors text-text/60 dark:text-gray-400">
-                  {dark ? <Icons.Sun /> : <Icons.Moon />}
+                  {dark ? <Icon name="sun" className="w-5 h-5"/> : <Icon name="moon" className="w-5 h-5"/>}
                 </button>
-                <Link to="/login" className="px-5 py-2 rounded-xl text-sm font-semibold text-text/70 dark:text-gray-300 hover:text-primary dark:hover:text-secondary transition-colors">Sign In</Link>
-                <Link to="/signup" className="btn-gradient px-6 py-2.5 rounded-xl text-sm font-semibold">Start Free</Link>
+                <a href="/login" className="px-5 py-2 rounded-xl text-sm font-semibold text-text/70 dark:text-gray-300 hover:text-primary dark:hover:text-secondary transition-colors">Sign In</a>
+                <a href="/signup" className="btn-gradient px-6 py-2.5 rounded-xl text-sm font-semibold">Start Free</a>
               </div>
               <div className="flex lg:hidden items-center gap-2">
                 <button onClick={toggle} className="p-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors text-text/60 dark:text-gray-400">
-                  {dark ? <Icons.Sun /> : <Icons.Moon />}
+                  {dark ? <Icon name="sun" className="w-5 h-5"/> : <Icon name="moon" className="w-5 h-5"/>}
                 </button>
                 <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-xl hover:bg-primary/5 dark:hover:bg-white/5 transition-colors text-text dark:text-white">
-                  <Icons.Menu />
+                  <Icon name="menu" className="w-6 h-6"/>
                 </button>
               </div>
             </div>
             <div className={`lg:hidden overflow-hidden transition-all duration-500 ${mobileOpen ? 'max-h-[600px]' : 'max-h-0'}`}>
               <div className="py-4 border-t border-black/5 dark:border-white/5 space-y-1">
-                {navLinks.map(link => <Link key={link} to={`/#${link.toLowerCase()}`} className="block px-4 py-3 rounded-xl text-sm font-medium text-text/70 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-white/5 transition-colors" onClick={() => setMobileOpen(false)}>{link}</Link>)}
+                {navLinks.map(link => <a key={link} href={`#${link.toLowerCase()}`} onClick={(e) => { scrollToSection(e, link); setMobileOpen(false); }} className="block px-4 py-3 rounded-xl text-sm font-medium text-text/70 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-white/5 transition-colors">{link}</a>)}
                 <div className="pt-3 px-4 flex flex-col gap-2">
-                  <Link to="/login" className="text-center px-5 py-2.5 rounded-xl text-sm font-semibold text-text/70 dark:text-gray-300 hover:text-primary dark:hover:text-secondary transition-colors">Sign In</Link>
-                  <Link to="/signup" className="btn-gradient text-center px-6 py-2.5 rounded-xl text-sm font-semibold">Start Free</Link>
+                  <a href="/login" className="text-center px-5 py-2.5 rounded-xl text-sm font-semibold text-text/70 dark:text-gray-300 hover:text-primary dark:hover:text-secondary transition-colors">Sign In</a>
+                  <a href="/signup" className="btn-gradient text-center px-6 py-2.5 rounded-xl text-sm font-semibold">Start Free</a>
                 </div>
               </div>
             </div>
@@ -720,6 +675,7 @@
       );
     };
 
+    // ─── Footer ──────────────────────────────────────────────
     const Footer = () => {
       const columns = [
         { title:'Product', links:['Features','Pricing','API','Integrations'] },
@@ -733,13 +689,13 @@
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
               <div className="col-span-2 md:col-span-1">
-                <a href="/" className="flex items-center gap-2.5 text-xl font-extrabold text-text dark:text-white"><Icons.Logo /> Extraxy</a>
+                <a href="/" className="flex items-center gap-2.5 text-xl font-extrabold text-text dark:text-white"><Icon name="logo" className="w-10 h-10"/> Extraxy</a>
                 <p className="mt-3 text-sm text-text/40 dark:text-gray-400 max-w-xs">AI document extraction made simple. Transform unstructured documents into structured data instantly.</p>
                 <div className="mt-4 flex gap-3">
-                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icons.LinkedIn /></a>
-                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icons.Github /></a>
-                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icons.YouTube /></a>
-                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icons.Twitter /></a>
+                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icon name="linkedin" className="w-5 h-5"/></a>
+                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icon name="github" className="w-5 h-5"/></a>
+                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icon name="youtube" className="w-5 h-5"/></a>
+                  <a href="#" className="p-2 rounded-xl bg-bg dark:bg-[#1E293B] text-text/40 dark:text-gray-400 hover:text-primary dark:hover:text-secondary"><Icon name="twitter" className="w-5 h-5"/></a>
                 </div>
               </div>
               {columns.map(col => (
@@ -764,43 +720,75 @@
       );
     };
 
-    // ─────────────────────────────────────────────────────────────
-    // 7. APP with Router
-    // ─────────────────────────────────────────────────────────────
-    const { BrowserRouter, Routes, Route } = ReactRouterDOM;
-
+    // ─── App ──────────────────────────────────────────────────
     const App = () => {
-      React.useEffect(() => {
-        // Reveal observer for sections
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-        }, { threshold: 0.08 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        return () => observer.disconnect();
+      const [currentPage, setCurrentPage] = useState(() => {
+        const path = window.location.pathname;
+        if (path === '/dashboard') return 'dashboard';
+        if (path === '/login') return 'login';
+        if (path === '/signup') return 'signup';
+        if (path === '/upload') return 'upload';
+        return 'home';
+      });
+
+      useEffect(() => {
+        const handlePopState = () => {
+          const path = window.location.pathname;
+          if (path === '/dashboard') setCurrentPage('dashboard');
+          else if (path === '/login') setCurrentPage('login');
+          else if (path === '/signup') setCurrentPage('signup');
+          else if (path === '/upload') setCurrentPage('upload');
+          else setCurrentPage('home');
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
       }, []);
+
+      const navigate = (path) => {
+        window.history.pushState({}, '', path);
+        if (path === '/dashboard') setCurrentPage('dashboard');
+        else if (path === '/login') setCurrentPage('login');
+        else if (path === '/signup') setCurrentPage('signup');
+        else if (path === '/upload') setCurrentPage('upload');
+        else setCurrentPage('home');
+        window.scrollTo(0, 0);
+      };
+
+      // Override link clicks for SPA navigation
+      useEffect(() => {
+        const handleLinkClick = (e) => {
+          const target = e.target.closest('a');
+          if (target && target.href && target.href.startsWith(window.location.origin)) {
+            const path = target.pathname;
+            if (path.startsWith('/')) {
+              e.preventDefault();
+              navigate(path);
+            }
+          }
+        };
+        document.addEventListener('click', handleLinkClick);
+        return () => document.removeEventListener('click', handleLinkClick);
+      }, []);
+
+      let PageComponent;
+      switch(currentPage) {
+        case 'dashboard': PageComponent = Dashboard; break;
+        case 'login': PageComponent = Login; break;
+        case 'signup': PageComponent = Signup; break;
+        case 'upload': PageComponent = Upload; break;
+        default: PageComponent = Home;
+      }
 
       return (
         <ThemeProvider>
-          <BrowserRouter>
-            <Navbar />
-            <main>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/upload" element={<Upload />} />
-              </Routes>
-            </main>
-            <Footer />
-          </BrowserRouter>
+          <Navbar />
+          <PageComponent />
+          <Footer />
         </ThemeProvider>
       );
     };
 
-    // ─────────────────────────────────────────────────────────────
-    // 8. RENDER
-    // ─────────────────────────────────────────────────────────────
+    // ─── Render ──────────────────────────────────────────────
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
   </script>
